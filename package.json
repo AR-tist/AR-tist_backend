@@ -2,11 +2,15 @@
   "name": "firstnode",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "es5/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@magenta/music": "^1.23.1",
+    "midi-writer-js": "^2.1.4"
+  }
 }

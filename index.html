@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MP3 to MIDI Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .upload-form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .upload-form input[type="file"] {
+      display: none;
+    }
+    .upload-form label {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    .upload-form .file-name {
+      margin-left: 10px;
+    }
+    .result {
+      text-align: center;
+    }
+    .result a {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>MP3 to MIDI Converter</h1>
+  
+  <div class="upload-form">
+    <input type="file" id="fileInput" accept="audio/mpeg">
+    <label for="fileInput">Choose MP3 File</label>
+    <span class="file-name"></span>
+    <button id="uploadBtn">Upload</button>
+  </div>
+  
+  <div class="result" id="resultContainer" style="display: none;">
+    <h2>Conversion Result</h2>
+    <a id="downloadLink" href="#" download>Download MIDI</a>
+  </div>
+
+  <script>
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+    document.getElementById('uploadBtn').addEventListener('click', uploadFile);
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      const fileName = file.name;
+      const fileDisplay = document.querySelector('.file-name');
+      fileDisplay.textContent = fileName;
+    }
+
+    function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      if (!fileInput.files || !fileInput.files[0]) {
+        alert('Please select a file to upload.');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/upload', true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText);
+          if (response.success) {
+            displayResult();
+          } else {
+            alert('An error occurred during file upload.');
+          }
+        }
+      };
+      xhr.send(formData);
+    }
+
+    function displayResult() {
+      const resultContainer = document.getElementById('resultContainer');
+      const downloadLink = document.getElementById('downloadLink');
+      resultContainer.style.display = 'block';
+      downloadLink.href = '/download';
+    }
+  </script>
+</body>
+</html>
