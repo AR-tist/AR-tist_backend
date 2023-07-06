@@ -3,6 +3,9 @@ const fs = require('fs');
 const { createWriteStream } = require('fs');
 const MidiWriter = require('midi-writer-js');
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
 const hostname = '127.0.0.1';
 const port = 4000;
 
@@ -58,6 +61,14 @@ const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', 'text/plain');
     res.end('Not Found');
   }
+});
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  const file = req.file;
+  console.log(file);
+
+
+  res.send('File uploaded successfully');
 });
 
 server.listen(port, hostname, () => {
