@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MP3 to MIDI Converter</title>
+  <title>MIDI Uploader</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,6 +12,7 @@
     }
     .upload-form {
       display: flex;
+      flex-direction: column; /* 수정: 세로로 정렬 */
       align-items: center;
       justify-content: center;
       margin-bottom: 20px;
@@ -24,9 +25,16 @@
       color: #fff;
       padding: 10px 20px;
       cursor: pointer;
+      margin-bottom: 10px; /* 수정: 아래 여백 추가 */
+    }
+    .upload-btn {
+      background-color: #80d3fc;
+      color: #fff;
+      padding: 10px 20px;
+      cursor: pointer;
     }
     .upload-form .file-name {
-      margin-left: 10px;
+      margin-bottom: 10px; /* 수정: 아래 여백 추가 */
     }
     .result {
       text-align: center;
@@ -40,13 +48,13 @@
   </style>
 </head>
 <body>
-  <h1>MP3 to MIDI Converter</h1>
+  <h1>MIDI Uploader</h1>
   
   <div class="upload-form">
-    <input type="file" id="fileInput" accept="audio/mpeg">
-    <label for="fileInput">Choose MP3 File</label>
+    <input type="file" id="fileInput" accept="audio/midi, audio/mid">
+    <label for="fileInput">Choose Midi File</label>
     <span class="file-name"></span>
-    <button id="uploadBtn">Upload</button>
+    <button id="uploadBtn" class="upload-btn">Upload</button>
   </div>
   
   <div class="result" id="resultContainer" style="display: none;">
