@@ -52,6 +52,8 @@ app.get('/list', async (req, res) => {
 
 
 const port = 4000;
-app.listen(port, () => {
+const hostname = '0.0.0.0'; // 외부접속ㄱ
+
+app.listen(port, hostname, () => {
   console.log(`Server running on port ${port}`);
 });
