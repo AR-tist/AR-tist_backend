@@ -11,10 +11,10 @@ const storage = multer.diskStorage({
     callback(null, "uploads/");
   },
   filename: (req, file, callback) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const dateSuffix = Date.now();
     let ext = file.originalname.lastIndexOf(".");
     ext = file.originalname.substr(ext + 1);
-    callback(null, `${uniqueSuffix}.${ext}`);
+    callback(null, `${dateSuffix}.${ext}`);
   },
 });
 
@@ -28,10 +28,11 @@ mongoose.connect('mongodb://localhost:27017/ar-tist', {
 });
 
 const midiFileSchema = new mongoose.Schema({
+  filename: String,
+  title: String,
   timestamp: { type: Date, default: Date.now },
-  url: String,
-  title: String, // 제목 필드 추가
 });
+
 const MidiFile = mongoose.model('MidiFile', midiFileSchema);
 
 function isMidiFile(filename) {
@@ -52,9 +53,9 @@ app.post("/upload", upload.single("file"), (req, res) => {
     return res.status(400).json({ error: "Invalid file format" });
   }
 
-  const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+  const dateSuffix = Date.now();
   const ext = path.extname(file.originalname);
-  const fileName = `${name}-${uniqueSuffix}${ext}`; // 전달된 이름과 고유한 값으로 파일 이름 생성
+  const fileName = `${name}-${dateSuffix}${ext}`; // 전달된 이름과 고유한 값으로 파일 이름 생성
 
   const destinationPath = path.join(__dirname, "uploads", fileName);
 
@@ -63,25 +64,26 @@ app.post("/upload", upload.single("file"), (req, res) => {
       return res.status(500).json({ error: "Failed to save file" });
     }
 
-    const url = `http://localhost:3000/uploads/${fileName}`;
+    const newMidiFile = new MidiFile({ fileName, title }); // 미디필드만들기
 
-    const newMidiFile = new MidiFile({ url, title }); // 제목 필드 추가
-    newMidiFile.save((err, savedFile) => {
-      if (err) {
-        return res.status(500).json({ error: "Failed to save file" });
-      }
-      res.json({ file: savedFile });
-    });
+    let output;
+    (async () => {
+      output = await newMidiFile.save();
+    })
+    console.log(output);
+    res.json({ file: "output" });
   });
+
 });
 
 app.get('/list', async (req, res) => {
   try {
     // MongoDB에서 MIDI 파일 리스트 조회
-    const files = await MidiFile.find({}, 'timestamp originalname');
+    const files = await MidiFile.find({}, 'filename timestamp title originalname');
     const fileList = files.map((file) => ({
       timestamp: file.timestamp,
-      filename: file.originalname,
+      filename: file.filename,
+      title: file.title,
       downloadUrl: `/download/${file.filename}`, // 다운로드 URL 생성
     }));
     res.json(fileList);
