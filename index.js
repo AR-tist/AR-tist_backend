@@ -22,7 +22,7 @@ const upload = multer({ storage });
 
 // MongoDB 연결 설정
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/midi-files', {
+mongoose.connect('mongodb://localhost:27017/ar-tist', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
