@@ -4,6 +4,19 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const mongoose = require('mongoose');
 
+
+// MongoDB 연결 설정
+mongoose.connect('mongodb://localhost:27017/midi-files', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const midiFileSchema = new mongoose.Schema({
+  timestamp: { type: Date, default: Date.now },
+  url: String,
+});
+const MidiFile = mongoose.model('MidiFile', midiFileSchema);
+
+
 function isMidiFile(filename) {
   return filename.endsWith('.mid');
 }
@@ -22,6 +35,21 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
   res.send('File uploaded successfully');
 });
+
+app.get('/list', async (req, res) => {
+  try {
+    // MongoDB에서 MIDI 파일 리스트 조회
+    const files = await MidiFile.find({}, 'timestamp url');
+    const fileList = files.map((file) => ({
+      timestamp: file.timestamp,
+      url: file.url,
+    }));
+    res.json(fileList);
+  } catch (error) {
+    res.status(500).send('Error retrieving MIDI file list');
+  }
+});
+
 
 const port = 4000;
 app.listen(port, () => {
