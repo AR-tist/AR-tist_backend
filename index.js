@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const uploadRouter = require('./upload');
 const MidiFile = require('./database');
 
@@ -6,6 +7,12 @@ const path = require('path');
 
 const app = express();
 
+// 'http://localhost:3000'의 모든 요청 허용
+app.use(cors({ origin: 'http://localhost:3000' }));
+
+// Other middleware and routes setup
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.use('/upload', uploadRouter);
 
