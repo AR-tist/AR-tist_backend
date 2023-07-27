@@ -1,10 +1,15 @@
 const express = require('express');
 const uploadRouter = require('./upload');
 const MidiFile = require('./database');
-
+const cors = require('cors');
 const app = express();
+app.use(cors({
+  origin: '*',
+}));
 
-
+app.get('/', (req, res) => {
+  res.send('Hello')
+})
 app.use('/upload', uploadRouter);
 
 app.get('/list', async (req, res) => {
@@ -33,7 +38,7 @@ app.get('/download/:filename', (req, res) => {
   });
 });
 
-const port = 4444;
+const port = 8000;
 const hostname = '0.0.0.0';
 
 app.listen(port, () => {
