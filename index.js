@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const uploadRouter = require('./upload');
 const MidiFile = require('./database');
-const cors = require('cors');
+const fs = require('fs');
+const fsPromises = require('fs').promises;
 
 const path = require('path');
 
@@ -25,6 +26,7 @@ app.get('/list', async (req, res) => {
       filename: file.filename,
       title: file.title,
       downloadUrl: `/download/${encodeURIComponent(file.filename)}`,
+      deleteUrl: `/delete/${encodeURIComponent(file.filename)}`,
     }));
     res.json(fileList);
   } catch (error) {
@@ -41,6 +43,31 @@ app.get('/download/:filename', (req, res) => {
       res.status(404).send('File not found');
     }
   });
+});
+
+// 파일 삭제 API
+app.delete('/delete/:filename', async (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, 'uploads', filename);
+
+
+  try {
+    // 데이터베이스에서 해당 파일 정보 삭제
+    await MidiFile.deleteOne({ filename });
+
+    // 파일 존재 확인
+    const fileStats = await fs.promises.stat(filePath);
+    if (!fileStats.isFile()) {
+      return res.status(404).send('File not found');
+    }
+
+    // 파일 삭제
+    await fs.promises.unlink(filePath);
+    res.send('File deleted successfully');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error deleting the file');
+  }
 });
 
 const port = 8000;
