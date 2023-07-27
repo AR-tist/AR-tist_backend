@@ -1,15 +1,20 @@
 const express = require('express');
+const cors = require('cors');
 const uploadRouter = require('./upload');
 const MidiFile = require('./database');
 const cors = require('cors');
+
+const path = require('path');
+
 const app = express();
 app.use(cors({
   origin: '*',
 }));
 
-app.get('/', (req, res) => {
-  res.send('Hello')
-})
+// Other middleware and routes setup
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 app.use('/upload', uploadRouter);
 
 app.get('/list', async (req, res) => {
