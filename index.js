@@ -32,12 +32,12 @@ app.get('/list', async (req, res) => {
       poster: file.poster,
       like: file.like,
       views: file.views,
-      password: file.password,
       music_length: file.music_length,
       downloadUrl: `/download/${encodeURIComponent(file.filename)}`,
       deleteUrl: `/delete/${encodeURIComponent(file.filename)}`,
     }));
     res.json(fileList);
+    console.log(fileList);
   } catch (error) {
     res.status(500).send('Error retrieving MIDI file list');
   }
