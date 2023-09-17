@@ -21,7 +21,7 @@ app.use('/upload', uploadRouter);
 
 app.get('/list', async (req, res) => {
   try {
-    const files = await MidiFile.find({}, 'filename timestamp title');
+    const files = await MidiFile.find({}, 'filename timestamp title imgurl subtitle rank poster like views music_length');
     const fileList = files.map((file) => ({
       timestamp: file.timestamp,
       filename: file.filename,
