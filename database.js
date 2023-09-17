@@ -11,6 +11,13 @@ mongoose.connect('mongodb://localhost:27017/ar-tist', {
 const midiFileSchema = new mongoose.Schema({
   filename: String,
   title: String,
+  imgurl: String,
+  subtitle: String,
+  rank: Number,
+  poster: String,
+  like: Number,
+  views: Number,
+  music_length: Number,
   timestamp: { type: Date, default: Date.now },
 });
 

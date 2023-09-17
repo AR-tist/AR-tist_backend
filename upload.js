@@ -11,6 +11,9 @@ const upload = multer({ dest: 'uploads/' });
 router.post('/', upload.single('file'), async (req, res) => {
   const file = req.file;
   const title = req.body.title;
+  const subtitle = req.body.subtitle;
+  const poster = req.body.poster;
+
 
   if (!file) {
     // 업로드된 파일이 없을 경우 에러 응답
@@ -37,6 +40,13 @@ router.post('/', upload.single('file'), async (req, res) => {
     const newMidiFile = new MidiFile({
       filename: fileName,
       title: title,
+      imgurl: '',
+      subtitle: subtitle,
+      poster: poster,
+      rank: 0,
+      like: 0,
+      views: 0,
+      music_length: 0,
       timestamp: Date.now(),
     });
 
@@ -46,13 +56,13 @@ router.post('/', upload.single('file'), async (req, res) => {
 
     // reponse 만들기
     const response = {
-        timestamp: output.timestamp,
-        filename: output.filename,
-        title: output.title,
-        downloadUrl: `/download/${encodeURIComponent(output.filename)}`,
-      };
+      timestamp: output.timestamp,
+      filename: output.filename,
+      title: output.title,
+      downloadUrl: `/download/${encodeURIComponent(output.filename)}`,
+    };
 
-      
+
     res.status(200).json(response);
   });
 });

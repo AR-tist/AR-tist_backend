@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/upload', uploadRouter);
 
+
 app.get('/list', async (req, res) => {
   try {
     const files = await MidiFile.find({}, 'filename timestamp title');
@@ -25,6 +26,13 @@ app.get('/list', async (req, res) => {
       timestamp: file.timestamp,
       filename: file.filename,
       title: file.title,
+      imgurl: file.imgurl,
+      subtitle: file.subtitle,
+      rank: file.rank,
+      poster: file.poster,
+      like: file.like,
+      views: file.views,
+      music_length: file.music_length,
       downloadUrl: `/download/${encodeURIComponent(file.filename)}`,
       deleteUrl: `/delete/${encodeURIComponent(file.filename)}`,
     }));
