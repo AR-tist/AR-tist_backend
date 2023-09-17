@@ -18,6 +18,7 @@ const midiFileSchema = new mongoose.Schema({
   like: Number,
   views: Number,
   music_length: Number,
+  password: String,
   timestamp: { type: Date, default: Date.now },
 });
 
